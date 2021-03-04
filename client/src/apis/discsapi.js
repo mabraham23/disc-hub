@@ -2,8 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/'
-  // baseURL: 'https://git.heroku.com/evening-waters-09828.git'
+  baseURL: 'https://fast-badlands-23682.herokuapp.com'
 })
 
 function getDiscsApi (cb) {
