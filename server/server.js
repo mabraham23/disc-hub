@@ -4,8 +4,10 @@ const cors = require('cors');
 var multer = require('multer');
 var bodyParser = require('body-parser');
 const GridFsStorage = require("multer-gridfs-storage");
+const mongodb = require('./MongoConfig')
 
-mongoose.connect('mongodb+srv://web-4200:bQdK5h22i3Y4Hhtx@mydatabase.thqf4.mongodb.net/discs?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+
+mongoose.connect( mongodb.mongo, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const app = express();
 const port = process.env.PORT || 3000;

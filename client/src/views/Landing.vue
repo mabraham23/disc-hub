@@ -35,7 +35,6 @@ export default {
     /* Center and scale the image nicely */
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 70%;
     /* background-size: cover; */
 }
 
