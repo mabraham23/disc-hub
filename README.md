@@ -33,6 +33,7 @@
 | HTTP Method | Path   |
 | ----------- | ------ |
 | GET         | /discs |
+| GET         | /discs/:id |
 | POST        | /discs |
 | PUT         | /discs/:id |
 | DELETE      | /discs/:id |
