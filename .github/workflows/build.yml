@@ -29,7 +29,7 @@ jobs:
       working-directory: ./client
 
     - name: Build
-      run: npm build 
+      run: npm run build 
       working-directory: ./client
 
     - name: Move build files to subdir
