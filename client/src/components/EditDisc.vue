@@ -209,17 +209,6 @@ import { mapActions, mapGetters } from 'vuex'
       ],
       dialog: false,
       color: '',
-      disc: {
-        name: '',
-        brand: '',
-        type: '',
-        weight: '',
-        speed: '',
-        glide: '',
-        turn: '',
-        fade: '',
-        color: '',
-      },
       swatches: [
         ['#FF0000', '#AA0000', '#550000'],
         ['#FFFF00', '#AAAA00', '#555500'],
@@ -228,6 +217,9 @@ import { mapActions, mapGetters } from 'vuex'
         ['#0000FF', '#0000AA', '#000055'],
       ],
     }),
+    props: {
+      disc: Object,
+    },
     computed: mapGetters({
       messages: 'messages',
     }),
