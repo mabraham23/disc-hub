@@ -1,0 +1,45 @@
+name: build
+
+on: workflow_dispatch
+
+# Automatic on push
+# on:
+#   push:
+#     branches: [ main ]
+
+jobs:
+
+  build:
+    name: Build for prod
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js 
+      uses: actions/setup-node@v2
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./client
+
+    - name: Build
+      run: npm build 
+      working-directory: ./client
+
+    - name: Move build files to subdir
+      run: ./scripts/package.sh
+      working-directory: ./
+
+    - name: Push build dir to prod
+      uses: s0/git-publish-subdir-action@develop
+      env:
+        REPO: self
+        BRANCH: prod
+        FOLDER: build
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
