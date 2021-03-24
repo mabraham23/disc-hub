@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 
 const api = axios.create({
-  baseURL: 'https://fast-badlands-23682.herokuapp.com'
+  baseURL: '/'
 })
 
 function getDiscsApi (cb) {
