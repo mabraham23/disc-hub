@@ -189,7 +189,7 @@ import { mapActions, mapGetters } from 'vuex'
       ],
       weightRules: [
         v => ( v.length <= 3) || 'Weight must be less than 3 characters',
-        v => ( v >= 120 && v <= 230) || 'Weight must be a number and be between 120 and 230',
+        v => ( v == " " || v >= 120 && v <= 230) || 'Weight must be a number and be between 120 and 230',
       ],
       speedRules: [
         v => ( v.length <= 2) || 'Speed must be two digits or less',
@@ -235,6 +235,15 @@ import { mapActions, mapGetters } from 'vuex'
       validate () {
         if ( this.$refs.form.validate() ) {
           this.saveDisc(this.disc);
+          this.disc.name = " ";
+          this.disc.brand = " ";
+          this.disc.type = " ";
+          this.disc.weight = " ";
+          this.disc.speed = "";
+          this.disc.glide = "";
+          this.disc.turn = "";
+          this.disc.fade = "";
+          this.disc.color = "";
           this.dialog = false;
         }
       },

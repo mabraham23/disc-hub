@@ -188,23 +188,23 @@ import { mapActions, mapGetters } from 'vuex'
         v => !!v || 'Type is required',
       ],
       weightRules: [
-        v => ( v.length <= 3) || 'Weight must be less than 3 characters',
+        v => ( v.toString().length <= 3) || 'Weight must be 3 digits or less',
         v => ( v >= 120 && v <= 230) || 'Weight must be a number and be between 120 and 230',
       ],
       speedRules: [
-        v => ( v.length <= 2) || 'Speed must be two digits or less',
+        v => ( v.toString().length <= 2) || 'Speed must be two digits or less',
         v => ( v >= 0 && v <= 14) || 'Must be a number and between 1 and 14',
       ],
       glideRules: [
-        v => (v && v.length <= 1) || 'Glide must be a single digit',
+        v => (v && v.toString().length <= 1) || 'Glide must be a single digit',
         v => ( v >= 1 && v <= 7) || 'Must be a number and between 1 and 7',
       ],
       turnRules: [
-        v => (v && v.length <= 2) || 'Turn must be two digits or less',
+        v => (v && v.toString().length <= 2) || 'Turn must be two digits or less',
         v => ( v >= -5 && v <= 1) || 'Must be a number and between -5 and 1',
       ],
       fadeRules: [
-        v => (v && v.length <= 1) || 'Fade must be a single digit',
+        v => (v && v.toString().length <= 1) || 'Fade must be a single digit',
         v => ( v >= 0 && v <= 5) || 'Must be a number and between 0 and 5',
       ],
       dialog: false,

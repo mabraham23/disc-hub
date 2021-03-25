@@ -30,7 +30,6 @@ function updateData (iddisc, data, cb) {
   data = qs.stringify(data)
   api.put('discs/' + iddisc, data)
   .then((response) => {
-    // cb({ status: 201 })
     cb(response)
   })
   .catch((error) => {
