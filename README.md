@@ -1,7 +1,7 @@
 # Disc Golf Vue App
 
 URL for DiscHub
-https://fast-badlands-23682.herokuapp.com/#/discs
+https://disc-hub.herokuapp.com
 
 ### Disc Resource
 
