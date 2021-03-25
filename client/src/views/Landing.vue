@@ -26,7 +26,7 @@ export default {
 <style>
 .landing {
     text-align: center;
-    background: url('../assets/images/disc-golf-background.jpg') no-repeat center center fixed;
+    background: url('../assets/images/hero.jpeg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

@@ -70,7 +70,6 @@
         ]),
         computed: {
             darkDisc: function () {
-                console.log(this.disc.color)
                 let darkcolors= [
                     '#FF0000FF', '#550000FF', '#AA0000FF',
                     '#AAAA00FF', '#555500FF',
