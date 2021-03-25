@@ -17,10 +17,10 @@ app.use(bodyParser.json())
 app.use(cors()); 
 app.use(express.static('public'))
 
-let colors = {
-    values: ['#FF0000', '#AA0000', '#550000','#FFFF00', '#AAAA00', '#555500', '#00FF00', '#00AA00', '#005500', '#00FFFF', '#00AAAA', '#005555', '#0000FF', '#0000AA', '#000055'],
-    message: "That's not a color . . . idiot "
-}
+// let colors = {
+//     values: ['#FF0000', '#AA0000', '#550000','#FFFF00', '#AAAA00', '#555500', '#00FF00', '#00AA00', '#005500', '#00FFFF', '#00AAAA', '#005555', '#0000FF', '#0000AA', '#000055'],
+//     message: "That's not a color . . . idiot "
+// }
 const Disc = mongoose.model('Disc', {
     name: {
        type: String,
@@ -64,8 +64,6 @@ const Disc = mongoose.model('Disc', {
     },
     color: {
         type: String,
-        required: [true, "You must submit a disc color"],
-        enum: colors
     },
 });
 
