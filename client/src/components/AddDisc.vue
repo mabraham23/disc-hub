@@ -235,6 +235,7 @@ import { mapActions, mapGetters } from 'vuex'
       validate () {
         if ( this.$refs.form.validate() ) {
           this.saveDisc(this.disc);
+          this.disc.user_id = " ";
           this.disc.name = " ";
           this.disc.brand = " ";
           this.disc.type = " ";
@@ -250,7 +251,7 @@ import { mapActions, mapGetters } from 'vuex'
       ...mapActions({
         saveDisc: 'saveDisc'
       }),
-    }
+    },
   }
 </script>
 

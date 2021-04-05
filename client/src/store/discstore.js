@@ -1,55 +1,10 @@
-// import Vue from 'vue'
-// import Vuex from 'vuex'
-// import axios from 'axios'
-// import VueAxios from 'vue-axios'
-// import qs from 'qs'
-
-// Vue.use(Vuex)
-// Vue.use(VueAxios, axios)
-
-// export default new Vuex.Store({
-// 	state: {
-//     discs: []
-// 	},
-//   actions: {
-//     loadDiscs ({ commit }) {
-//       axios
-//         .get('http://localhost:3000/discs')
-//         .then(response => response.data)
-//         .then(discs => {
-//         commit('SET_DISCS', discs)
-//         })
-//     },
-//     createDisc ( disc ) {
-//       disc = qs.stringify(disc);
-//       const headers = {
-//         'Content-Type': 'application/x-www-form-urlencoded'
-//       };
-//       axios.post('http://localhost:3000/discs', disc, headers )
-//         .then(response =>  {
-//           if (response.status == 201 ) {
-//             console.log(response);
-//           } else {
-//             alert("Load Discs Failed")
-//           } 
-//         })
-//     }
-//   },
-//   mutations: {
-//     SET_DISCS (state, discs) {
-//       state.discs = discs
-//     }
-//   }
-// })
-
-
 import discsApi from '../apis/discsapi'
 import * as mutationType from './mutation_types'
 
 // initial state
 const state = {
   discs : [],
-  message: null
+  message: null,
 }
 
 // initial getters
@@ -66,9 +21,9 @@ const getters = {
 const actions = {
   // get data from API
   getAllDiscs ({commit}) {
-    discsApi.getDiscs(discs => {
-      commit(mutationType.SHOW_ALL_DISCS, discs )
-    })
+      discsApi.getDiscs(discs => {
+        commit(mutationType.SHOW_ALL_DISCS, discs )
+      })
   },
   // // save data
   saveDisc (context, data ) {

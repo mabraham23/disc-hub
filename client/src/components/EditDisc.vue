@@ -227,11 +227,13 @@ import { mapActions, mapGetters } from 'vuex'
       validate () {
         if ( this.$refs.form.validate() ) {
           this.updateDisc(this.disc);
+          this.getDiscs();
           this.dialog = false;
         }
       },
       ...mapActions({
-        updateDisc: 'updateDisc'
+        updateDisc: 'updateDisc',
+        getDiscs: 'getAllDiscs'
       }),
     }
   }

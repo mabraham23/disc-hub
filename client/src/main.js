@@ -4,11 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import store from './store/store'
 import router from './router'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+// import axios from 'axios'
+// import VueAxios from 'vue-axios'
 import vuetify from './plugins/vuetify';
-
-Vue.use( axios, VueAxios)
 
 Vue.config.productionTip = false
 

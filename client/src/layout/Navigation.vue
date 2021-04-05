@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-btn color=primary to="/">
+    <v-app-bar app >
+        <v-btn color="primary" to="/">
             Home
         </v-btn>
         <v-btn color=primary to="/discs">
@@ -9,12 +9,18 @@
         <v-btn color=primary to="/games">
             games
         </v-btn>
-    </div>
+        <v-spacer></v-spacer>
+        <ProfileMenu></ProfileMenu>
+    </v-app-bar>
 </template>
 
 <script>
+import ProfileMenu from '../components/ProfileMenu.vue'
 export default {
     name: 'AppNavigation',
+    components: {
+        ProfileMenu,
+    }
 };
 </script>
 
@@ -25,6 +31,9 @@ export default {
 }
 #nav-column {
     margin-left: 4rem;
+}
+a{
+  text-decoration: none;
 }
 </style>
 
