@@ -1,132 +1,147 @@
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
-const cors = require('cors');
-var multer = require('multer');
-var bodyParser = require('body-parser');
-const GridFsStorage = require("multer-gridfs-storage");
-const mongodb = require('./MongoConfig')
 
+const passport = require('passport');
+const passportLocal = require('passport-local');
+
+const mongodb = require('./MongoConfig');
+
+const cors = require('cors');
+var bodyParser = require('body-parser');
 
 mongoose.connect( mongodb.mongo, { useNewUrlParser: true, useUnifiedTopology: true })
-
 const app = express();
 const port = process.env.PORT || 3000;
+
+const model = require('./model');
 
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 app.use(cors()); 
 app.use(express.static('public'))
 
-// let colors = {
-//     values: ['#FF0000', '#AA0000', '#550000','#FFFF00', '#AAAA00', '#555500', '#00FF00', '#00AA00', '#005500', '#00FFFF', '#00AAAA', '#005555', '#0000FF', '#0000AA', '#000055'],
-//     message: "That's not a color . . . idiot "
-// }
-const Disc = mongoose.model('Disc', {
-    name: {
-       type: String,
-       required: [true, "You must submit a disc name"],
-       maxLength: [30, "Your disc name must be 30 characters or less"]
-    },
-    brand: {
-        type: String,
-        required: [true, "You must submit a disc brand"],
-        enum:['Innova', 'Discraft', 'Streamline', 'Infinite', 'Dynamic Discs', 'Latitude 64', 'Westside Discs']
-    },
-    type: {
-        type: String,
-        required: [true, "You must submit a disc type"],
-        enum: ['Distance Driver', 'Fairway Driver', 'Midrange', 'Putter']
-    },
-    weight: {
-        type: Number,
-        min: 0,
-        max: 230,
-    },
-    speed: {
-        type: Number,
-        min: 0,
-        max: 14
-    },
-    glide: {
-        type: Number,
-        min: 0,
-        max: 7
-    },
-    turn: {
-        type: Number,
-        min: -5,
-        max: 1
-    },
-    fade: {
-        type: Number,
-        min: 0,
-        max: 5
-    },
-    color: {
-        type: String,
-    },
+// used to sign a cookie to verify the signature of the client or server
+app.use(session({ secret: '3df23fnb912jslzl05f', resave: false, saveUninitialized: true }));
+
+// passport session 
+app.use(passport.initialize());
+
+// glue between the two
+app.use(passport.session());
+
+// 1. local stategy implementation
+passport.use(new passportLocal.Strategy({
+    usernameField: "email",
+    passwordField: "plainPassword"
+}, function(email, plainPassword, done) {
+    // done is a function, call when done!
+    model.User.findOne({ email: email }).then(function (user) {
+        // verify that the user exists:
+        if ( !user ) {
+            // fail: user does not exist
+            done( null, false );
+            return;
+        }
+        // verify user's password
+        user.verifyPassword(plainPassword, function ( result ) {
+            if ( result ) {
+            // user and password matched
+                done( null, user );
+            } else {
+            // user exists but given wrong password 
+                done( null, false );
+            }
+        });
+    }).catch( function (err) {
+        done(err);
+    });
+}));
+
+// 2. serialize user to session
+passport.serializeUser(function( user, done) {
+    done(null, user._id);
 });
 
-const doc = new Disc({});
-
-const err = doc.validateSync();
-// err instanceof mongoose.Error.ValidationError; // true
-
-var Schema = mongoose.Schema;
-
-var ImageSchema = new Schema({
-	text: {
-		type: String,
-		required: true
-	},
-	image: {
-		type: Buffer,
-	}
+// 3. de-serialize user from session
+passport.deserializeUser(function( userId, done ) {
+    model.User.findOne({ _id: userId }).then(function (user) {
+        done(null, user);
+    }).catch( function (err) {
+        done(err);
+    })
 });
 
-var Image = mongoose.model('Image', ImageSchema);
-
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, "uploads/");
-	},
-	filename: (req, file, cb) => {
-		cb(null, file.originalname);
-	}
+// 4. Need the authenticate endpoint 
+app.post("/session", passport.authenticate("local"), function(req, res) {
+    // this function is called if authentication succeeds
+    res.sendStatus(201);
 });
 
-var upload = multer({storage: storage}).single('myimage');
-
-app.get('/card', function(req, res, next) {
-	Image.find({Image}).then((images) => {
-		res.render('index', {images: images});
-	});
+// 4. Need the authenticate endpoint 
+app.get("/session", passport.authenticate("local"), function(req, res) {
+    // this function is called if authentication succeeds
+    res.sendStatus(201);
 });
 
-app.post('/card', (req, res) => {
-	upload(req, res, (err) => {
-		if (err) {
-            console.log(req.body)
-			return res.end('error request file');
-		}
-		var data = new Image({
-			text: req.body.text,
-			image: req.file.originalname
-		});
-		data.save().then((result) => {
-			res.send(result);
-		});
-		console.log(req.file);
-		res.end('upload file success');
-		console.log('success');
-	});
+// logout user
+app.delete("/session", function(req, res) {
+    // this function is called if authentication succeeds
+    req.logOut();
+    res.sendStatus(200);
+})
+
+// 5. "me" endpoint 
+app.get("/me", function(req, res) {
+    if ( req.user ) {
+        res.json(req.user);
+        // send user details
+    } else {
+        res.sendStatus(401);
+    }
 });
 
 
+app.post('/users', (req, res) => {
+
+    var user = new model.User({
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+    });
+
+    user.setEncryptedPassword(req.body.plainPassword, function () {
+    // Store hash in your passowrd DB
+        user.save().then(() => {
+            console.log('User Created');
+            res.sendStatus(201);
+        }).catch(function(err) {
+            if ( err.errors ) {
+                var messages = {};
+                for ( var e in err.errors) {
+                    messages[e] = err.errors[e].messages;
+                }
+                res.status(422).json(messages);
+            } else if ( err.code == 11000 ) {
+                res.status(409).json({
+                    email: "Already Registered."
+                })
+            }
+            else {
+                // something else happened
+                res.sendStatus(500);
+                console.log("Unknown error occurred:", err);
+            }
+        })   
+    });
+});
+
+// DISCS API REQUESTS
 app.get('/discs', (req, res) => {
     // return a list of discs
     res.set("Access-Control-Allow-Origin", "*");
-    Disc.find().then((discs) => {
+    model.Disc.find().then((discs) => {
+        discs = discs.filter( disc => String(disc.user) == String(req.user._id));
         console.log("disc queried from DB:", discs);
         res.json(discs);
     });
@@ -134,7 +149,7 @@ app.get('/discs', (req, res) => {
 
 // retrieve an existing pizza member
 app.get('/discs/:discsId', (req, res) => {
-    Disc.findOne({ _id: req.params.discId }).then((disc) =>{
+    model.Disc.findOne({ _id: req.params.discId }).then((disc) =>{
         if (disc){
             res.json(disc);
         }
@@ -148,7 +163,12 @@ app.get('/discs/:discsId', (req, res) => {
 
 app.post('/discs', (req, res) => {
 
-    var disc = new Disc({
+    if ( !req.user ){
+        res.sendStatus(401);
+        return;
+    }
+
+    let disc = new model.Disc({
         name: req.body.name,
         brand: req.body.brand,
         type: req.body.type,
@@ -158,6 +178,7 @@ app.post('/discs', (req, res) => {
         turn: req.body.turn,
         fade: req.body.fade,
         color: req.body.color,
+        user: req.user._id,
     });
 
     disc.save().then(() => {
@@ -176,12 +197,11 @@ app.post('/discs', (req, res) => {
         // something else happened
         res.sendStatus(500);
     }
-})
+    })
 });
 
-
 app.delete('/discs/:discId', (req, res) => {
-    Disc.findByIdAndDelete(req.params.discId).then(() => {
+    model.Disc.findByIdAndDelete(req.params.discId).then(() => {
         console.log('Disc deleted');
         res.sendStatus(204);
     });
@@ -190,7 +210,7 @@ app.delete('/discs/:discId', (req, res) => {
 
 // retrieve an existing pizza member
 app.put('/discs/:discId', (req, res) => {
-    Disc.findOne({ _id: req.params.discId}).then((disc) =>{
+    model.Disc.findOne({ _id: req.params.discId}).then((disc) =>{
         if (disc){
                 disc.name = req.body.name;
                 disc.brand = req.body.brand;
