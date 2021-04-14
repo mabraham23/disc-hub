@@ -4,10 +4,13 @@
             Home
         </v-btn>
         <v-btn color=primary to="/discs">
-            discs
+            Discs
         </v-btn>
         <v-btn color=primary to="/games">
-            games
+            Games
+        </v-btn>
+        <v-btn color=primary to="/tournament">
+            Tournament
         </v-btn>
         <v-spacer></v-spacer>
         <ProfileMenu></ProfileMenu>

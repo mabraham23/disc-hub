@@ -6,6 +6,7 @@ import Games from '@/views/Games'
 import CrazyCaddy from '@/views/CrazyCaddy'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import Tournament from '@/views/Tournament'
 import store from '../store/store';
 
 
@@ -41,6 +42,14 @@ const routes = [
     path: '/discs',
     name: 'Discs',
     component: Discs,
+    meta: {
+      requireAuth: true
+    }
+  },
+  {
+    path: '/tournament',
+    name: 'Tournament',
+    component: Tournament,
     meta: {
       requireAuth: true
     }

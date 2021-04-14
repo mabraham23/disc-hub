@@ -50,21 +50,6 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <!-- <h1>Upload Image</h1>
-        <p>Welcome to App</p>
-        <br><br>
-        <form action="/card" method="post" enctype="multipart/form-data">
-        <p>
-            Text :
-            <input type="text" name="text">
-        </p>
-        <p>
-            <input type="file" name="myimage">
-        </p>
-        <p>
-            <input type="submit" name="submit" value="submit">
-        </p>
-        </form> -->
     </v-container>
 </template>
 

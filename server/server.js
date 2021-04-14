@@ -16,6 +16,39 @@ const port = process.env.PORT || 3000;
 
 const model = require('./model');
 
+// websocket stuff
+
+const WebSocket = require('ws');
+
+let server = app.listen(port, function() {
+   console.log("Web Socket server is listening on port", port);
+})
+
+const wss = new WebSocket.Server({ server: server })
+
+function broadcastToAllClients(data) {
+    wss.clients.forEach(function each(client) {
+        if ( client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(data));
+        }
+    })
+}
+
+function sendData( client, data ) {
+    client.sendData(JSON.stringify(data));
+}
+
+wss.on('connection', function connection(newClient) {
+    console.log("New client just connected");
+    newClient.on('message', (data) => {
+        console.log("A client just sent a message to the server:", data);
+        data = JSON.parse(data);
+        console.log("this is the data:", data)
+        broadcastToAllClients(data)
+    })
+});
+
+
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 app.use(cors()); 
@@ -138,10 +171,13 @@ app.post('/users', (req, res) => {
 
 // DISCS API REQUESTS
 app.get('/discs', (req, res) => {
+
+    let filter = {
+        user: req.user._id
+    }
     // return a list of discs
     res.set("Access-Control-Allow-Origin", "*");
-    model.Disc.find().then((discs) => {
-        discs = discs.filter( disc => String(disc.user) == String(req.user._id));
+    model.Disc.find(filter).then((discs) => {
         console.log("disc queried from DB:", discs);
         res.json(discs);
     });
@@ -149,7 +185,13 @@ app.get('/discs', (req, res) => {
 
 // retrieve an existing pizza member
 app.get('/discs/:discsId', (req, res) => {
-    model.Disc.findOne({ _id: req.params.discId }).then((disc) =>{
+
+    let filter = {
+        user: req.user._id,
+        _id: req.params.discId
+    }
+
+    model.Disc.findOne(filter).then((disc) =>{
         if (disc){
             res.json(disc);
         }
@@ -201,7 +243,13 @@ app.post('/discs', (req, res) => {
 });
 
 app.delete('/discs/:discId', (req, res) => {
-    model.Disc.findByIdAndDelete(req.params.discId).then(() => {
+
+    let filter = {
+        user: req.user._id,
+        _id: req.params.discId
+    }
+
+    model.Disc.findByIdAndDelete( filter ).then(() => {
         console.log('Disc deleted');
         res.sendStatus(204);
     });
@@ -210,7 +258,13 @@ app.delete('/discs/:discId', (req, res) => {
 
 // retrieve an existing pizza member
 app.put('/discs/:discId', (req, res) => {
-    model.Disc.findOne({ _id: req.params.discId}).then((disc) =>{
+
+    let filter = {
+        user: req.user._id,
+        _id: req.params.discId
+    }
+
+    model.Disc.findOne(filter).then((disc) =>{
         if (disc){
                 disc.name = req.body.name;
                 disc.brand = req.body.brand;
@@ -248,6 +302,6 @@ app.put('/discs/:discId', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`Example app listening at http://localhost:${port}`);
+// });
