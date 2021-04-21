@@ -135,6 +135,7 @@ import {mapGetters, mapActions} from 'vuex'
       },
       connectSocket: function() {
         this.socket = new WebSocket("wss://disc-hub.herokuapp.com");
+        // this.socket = new WebSocket("ws://localhost:3000");
         this.socket.onmessage = (event) => {
           this.receivedUpdates(event);
         };
@@ -145,6 +146,7 @@ import {mapGetters, mapActions} from 'vuex'
         update["hole" + this.playerHole] = this.playerScore
         update["userId"] = this.$store.state.user._id
         update["totalScore"] = this.$store.state.totalScore
+        console.log(update)
         this.socket.send(JSON.stringify(update))
       },
       receivedUpdates: function( update ) {
