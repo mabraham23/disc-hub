@@ -134,7 +134,7 @@ import {mapGetters, mapActions} from 'vuex'
         }
       },
       connectSocket: function() {
-        this.socket = new WebSocket();
+        this.socket = new WebSocket("wss://${document.location.host}");
         this.socket.onmessage = (event) => {
           this.receivedUpdates(event);
         };
