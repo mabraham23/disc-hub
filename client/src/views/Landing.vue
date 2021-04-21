@@ -5,15 +5,6 @@
             <v-btn class="blue lighten-2 mt-5" dark large to='/discs'>
                 Get Started
             </v-btn>
-            <v-btn @click="sendMessage" >
-                Send Message
-            </v-btn>
-            <input type="text" v-model="messageData">
-            <ul>
-                <li v-for="(message) in receivedMessages" :key="message.index">
-                    {{ message }}
-                </li>
-            </ul>
         </v-col>
     </v-container>
 </template>
@@ -25,33 +16,8 @@ export default {
     },
     data () {
         return {
-            msg: '',
-            messageData: '',
-            receivedMessages: [],
-            socket: null
         }
     },
-    methods: {
-        connectSocket() {
-            this.socket = new WebSocket("ws://localhost:3000");
-            this.socket.onmessage = (event) => {
-                this.receiveMessage(event);
-            }
-        },
-        receiveMessage( event ) {
-            let receivedMessage = JSON.parse( event.data )
-            this.receivedMessages.push(receivedMessage)
-        },
-        sendMessage: function() {
-            let data = {
-                message: this.messageData
-            };
-            this.socket.send(JSON.stringify(data))
-        },
-    },
-    created () {
-        this.connectSocket()
-    }
 }
 </script>
 

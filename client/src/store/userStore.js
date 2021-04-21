@@ -33,6 +33,7 @@ const actions = {
     userApi.loginUser (data, (response) => {
       if (response.status === 201) {
         this.state.authenticated = true; 
+        this.state.user = response.data
         router.push('/')
       }
       else {
@@ -73,7 +74,7 @@ const actions = {
     userApi.checkSession( response => {
       if ( response.status === 200 ) {
         this.state.authenticated = true;
-        this.state.user = response
+        this.state.user = response.data
         router.push('/')
       }
       else {

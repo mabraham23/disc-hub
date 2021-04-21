@@ -108,13 +108,9 @@ passport.deserializeUser(function( userId, done ) {
 // 4. Need the authenticate endpoint 
 app.post("/session", passport.authenticate("local"), function(req, res) {
     // this function is called if authentication succeeds
-    res.sendStatus(201);
-});
-
-// 4. Need the authenticate endpoint 
-app.get("/session", passport.authenticate("local"), function(req, res) {
-    // this function is called if authentication succeeds
-    res.sendStatus(201);
+    res.status(201).json(req.user);
+    // res.json(req.user);
+    // res.sendStatus(201);
 });
 
 // logout user
