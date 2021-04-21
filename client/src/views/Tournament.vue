@@ -134,7 +134,7 @@ import {mapGetters, mapActions} from 'vuex'
         }
       },
       connectSocket: function() {
-        this.socket = new WebSocket("wss://disc-hub.herokuapp.com/#/tournament");
+        this.socket = new WebSocket("wss://disc-hub.herokuapp.com");
         this.socket.onmessage = (event) => {
           this.receivedUpdates(event);
         };
