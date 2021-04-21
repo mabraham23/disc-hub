@@ -8,7 +8,7 @@ var app = new Vue({
   },
   methods: {
     connectSocket: function() {
-      this.socket = new WebSocket();
+      this.socket = new WebSocket("ws://localhost:3000");
       this.socket.onmessage = (event) => {
         this.receivedMessage(event);
       };
