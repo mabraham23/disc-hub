@@ -1,5 +1,7 @@
 # Disc Golf Vue App
 
+Disc-Hub is a web app built using Vue.js, Node.js, and MongoDB that is suited for disc-golf enthusiasts. It features a 'disc' page where users can add, edit and delete discs from their bag. Disc statistics include disc name, brand, type, weight, speed, glide, turn, fade and color. It also featutures a tournament page where users can keep track of an 18 hole tournament with each other by posting their scores for corresponding holes. This page is enabled using websockets. I hope you love disc-golf and my web-app as much as I do!
+
 URL for DiscHub
 https://disc-hub.herokuapp.com
 
